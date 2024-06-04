@@ -38,7 +38,9 @@ export const signin = async (req, res) => {
   }
 };
 
-export const signup = async () => {
+export const signup = async (req, res) => {
+  //http://localhost:5000/users/signin
+  // {email:..., pas.....}
   const { email, password, confirmPassword, firstName, lastName } = req.body;
 
   try {
@@ -55,20 +57,26 @@ export const signup = async () => {
         .json({ message: "The passwords does not match", unsuccessful: true });
 
     const hashedPassword = await bcrypt.hash(password, 12); // * the second parameter is the difficulty level, usually 12 is preferable...
-    let result;
-    if (role == 1) {
-      result = await User.create({
-        email,
-        password: hashedPassword,
-        name: `${firstName} ${lastName}`,
-      });
-    } else {
-      result = await User.create({
-        email,
-        password: hashedPassword,
-        name: `${firstName} ${lastName}`,
-      });
-    }
+    // let result;
+    // if (role == 1) {
+    //   result = await User.create({
+    //     email,
+    //     password: hashedPassword,
+    //     name: `${firstName} ${lastName}`,
+    //   });
+    // } else {
+    //   result = await User.create({
+    //     email,
+    //     password: hashedPassword,
+    //     name: `${firstName} ${lastName}`,
+    //   });
+    // }
+
+    const result = await User.create({
+      email,
+      password: hashedPassword,
+      name: `${firstName} ${lastName}`,
+    });
 
     const token = jwt.sign({ email: result.email, id: result._id }, "test", {
       expiresIn: "1h",
